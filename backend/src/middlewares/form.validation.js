@@ -10,7 +10,7 @@ export const validationMiddleware = async (req, res, next) => {
         }),
         body('password').isStrongPassword({
             minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1, minLength:6
-        }).withMessage("Passsword must contain one uppercase letter, one lowercase letter, one special character and one numeric digit. Password contains minimum 6 characters"),
+        }).withMessage("Passsword must contain one uppercase letter, one lowercase letter, one special character and one numeric digit."),
         body("password").isLength({min:6, max:12}).withMessage("Password contains minimum 6 and maximum 12 characters")        
     ]
 
@@ -20,8 +20,8 @@ export const validationMiddleware = async (req, res, next) => {
 
     if (!validationErrors.isEmpty()) {
         const errrorMesages = validationErrors.errors.map((obj) => obj.msg);
-        return res.status(400).send({
-            result: false,
+        return res.status(200).send({
+            success: false,
             message: errrorMesages
         });
     }

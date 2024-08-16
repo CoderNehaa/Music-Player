@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import generator from "generate-password";
 import mongoose from "mongoose";
 import UserModel from "../models/user.model.js";
@@ -26,7 +25,7 @@ export class UserController {
 
             let userExist = await UserModel.findOne({ email });
             if (userExist) {
-                throw new CustomError(409, "User with this email already exists");
+                throw new CustomError(200, "User with this email already exists");
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,13 +42,13 @@ export class UserController {
         }
     }
 
-    async deleteUser(req, res) {
+    async deleteUser(req, res, next) {
         try {
             const { userId } = req.params;
             const userIdObj = new mongoose.Types.ObjectId(userId);
             const userExist = await UserModel.findOne({ userId: userIdObj });
             if (!userExist) {
-                throw new CustomError(404, "User not found");
+                throw new CustomError(200, "User not found");
             }
             const result = await UserModel.deleteOne({ userId: userIdObj });
             if (result.deletedCount) {
@@ -66,28 +65,22 @@ export class UserController {
         }
     }
 
-    async signin(req, res) {
+    async signin(req, res, next) {
         try {
             const { email, password } = req.body;
             const user = await UserModel.findOne({ email });
             if (user) {
                 const passwordMatch = await bcrypt.compare(password, user.password);
                 if (passwordMatch) {
-                    const token = jwt.sign(
-                        { userId: user.userId, email: user.email },
-                        process.env.JWT_SECRET,
-                        { expiresIn: "1h" }
-                    )
                     return res.status(200).send({
                         success: true,
-                        data: user,
-                        token: token
+                        data: user
                     })
                 } else {
-                    throw new CustomError(400, "Wrong password! Try again")
+                    throw new CustomError(200, "Wrong password! Try again")
                 }
             } else {
-                throw new CustomError(404, "User not found")
+                throw new CustomError(200, "User not found")
             }
         } catch (e) {
             console.log(e);
@@ -95,13 +88,32 @@ export class UserController {
         }
     }
 
-    async resetPassword(req, res) {
+    async getUserById(req, res, next){
+            try {
+                const { userId } = req.params;
+                const userIdObj = new mongoose.Types.ObjectId(userId);
+                const user = await UserModel.findOne({ userId: userIdObj });
+                if (user) {
+                    return res.status(200).send({
+                        success: true,
+                        data: user
+                    });
+                } else {
+                    throw new CustomError(200, "User not found")
+                }
+            } catch (e) {
+                console.log(e);
+                next(e);
+            }
+    }
+
+    async resetPassword(req, res, next) {
         try {
             const { email, password } = req.body;
             const user = await UserModel.findOne({ email });
 
             if (!user) {
-                throw new CustomError(404, "User not found");
+                throw new CustomError(200, "User not found");
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
                 await UserModel.updateOne({ email }, { $set: { password: hashedPassword } });
@@ -113,9 +125,9 @@ export class UserController {
         }
     }
 
-    async mailRandomPassword(req, res) {
+    async mailRandomPassword(req, res, next) {
         try {
-            const { email } = req.params;
+            const { email } = req.body;
             const userExist = await UserModel.findOne({ email });
             if (userExist) {
                 let randomPassword = generator.generate({
@@ -124,15 +136,17 @@ export class UserController {
                 });
                 const hashedPassword = await bcrypt.hash(randomPassword, 10);
                 await UserModel.updateOne({ email }, { $set: { password: hashedPassword } });
-                const mailSent = await mailSender({ emailAddress: email, userName: userExist.userName });
+                const mailSent = await mailSender({ emailAddress: email, username: userExist.username, password:randomPassword });
                 if(mailSent){
                     return res.status(200).send({
                         success:true,
                         message:"Temporary password sent on this email address. Login again"
                     })
+                } else{
+                throw new CustomError(200, "Failed to send an email! Try later");
                 }
             } else {
-                throw new CustomError(404, "No account found associated with this email");
+                throw new CustomError(200, "No account found associated with this email");
             }
         } catch (e) {
             console.log(e);
