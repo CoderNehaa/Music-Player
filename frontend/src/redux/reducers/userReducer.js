@@ -121,6 +121,54 @@ export const getEmail = createAsyncThunk(
     }
 )
 
+export const addToFavorite = createAsyncThunk(
+    "addToFavorites",
+    async (song, thunkAPI) => {
+      try{        
+        const state = thunkAPI.getState();
+        const {user} = state.userReducer;
+  
+        const {data} = await axios.post(`http://localhost:3200/music/favorites/${user.id}/add/`, {
+            ...song
+        });
+        if(data.success){
+            const newFavoritesList = [song, ...user.favorites];
+            thunkAPI.dispatch(setUser({...user, favorites:newFavoritesList}));
+            toast.success(data.message);
+            // toast.success("Added to favorites!!");
+        } else {
+          toast.info(data.message)
+        }
+      } catch (e){
+        console.log(e);
+        toast.error("Failed to add favorite! Try later.");
+      }
+    }
+);
+  
+export const removeFavorite = createAsyncThunk(
+    "addToFavorites",
+    async (song, thunkAPI) => {
+      try{
+        const state = thunkAPI.getState();
+        const {user} = state.userReducer;
+  
+        const {data} = await axios.post(`http://localhost:3200/music/favorites/${user.id}/remove/`, {...song});
+        if(data.success){
+            const arr = user.favorites.filter((favorite) => favorite.id != song.id);
+            thunkAPI.dispatch(setUser({...user, favorites:arr}));
+            toast.success(data.message);
+        //   toast.success("Removed from favorites!!");
+        } else {
+          toast.info(data.message)
+        }
+      } catch (e){
+        console.log(e);
+        toast.error("Failed to remove favorite! Try later.");
+      }
+    }
+);
+
 const userSlice = createSlice({
     name:'userInfo',
     initialState:INITIAL_STATE,

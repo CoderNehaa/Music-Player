@@ -1,5 +1,12 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { getEmail, signin } from "@/redux/reducers/userReducer";
 import {
   Card,
   CardContent,
@@ -8,12 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "react-toastify";
-import { getEmail, signin } from "@/redux/reducers/userReducer";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
 import {
   Dialog,
   DialogContent,
@@ -21,7 +22,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 const Signin = () => {
   const [formData, setFormData] = useState({

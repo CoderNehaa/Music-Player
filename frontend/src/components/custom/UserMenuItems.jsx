@@ -2,9 +2,9 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import {
     Home,
-    Key,
     LogOut,
     Music,
+    Heart
   } from "lucide-react"
   import {
     DropdownMenu,
@@ -44,6 +44,10 @@ import PasswordDialog from "./PasswordDialog"
             <DropdownMenuItem onClick={() => navigate('/')}>
               <Home className="mr-2 h-4 w-4" />
               <span>Home</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/favorites')}>
+              <Heart className="mr-2 h-4 w-4" />
+              <span>Favorites</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/playlists')}>
               <Music className="mr-2 h-4 w-4" />

@@ -9,6 +9,7 @@ import { errorHandler } from "./src/middlewares/error.handler.js";
 import swaggerDoc from "./swagger.json" with { type: "json" };
 
 import cors from "cors";
+import musicRouter from "./src/routes/music.routes.js";
 
 const server = express();
 const port = process.env.PORT;
@@ -22,6 +23,8 @@ server.use(cors({
 
 server.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 server.use('/users', userRouter);
+server.use('/music', musicRouter);
+
 server.use(errorHandler);
 
 server.get('/', (req, res) => {

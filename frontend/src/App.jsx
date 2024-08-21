@@ -1,15 +1,16 @@
-
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './App.css'
-import Home from './pages/Home'
-import Auth from './pages/Auth'
-
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Navbar from './components/custom/Navbar';
-import { authentication } from './redux/reducers/userReducer';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+import Home from './pages/Home'
+import Auth from './pages/Auth'
+import Playlists from "./pages/Playlists";
+import Favorites from "./pages/Favorites";
+import Navbar from './components/custom/Navbar';
+
+import { authentication } from './redux/reducers/userReducer';
+import './App.css'
 
 function App() {
   const dispatch = useDispatch();
@@ -21,6 +22,14 @@ function App() {
         {
           index:true,
           element:<Home />
+        },
+        {
+          path:"/playlists",
+          element:<Playlists />
+        },
+        {
+          path:"/favorites",
+          element:<Favorites />
         },
         {
           path:'/auth',
@@ -35,9 +44,9 @@ function App() {
   }, []);
 
   return (
-    <div className='h-screen w-screen m-0 p-0'>
+    <div className='h-screen w-screen m-0 p-0 bg-slate-100 dark:bg-slate-900 dark:text-slate-400'>
       <RouterProvider router={routes}/>
-      <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={3000} newestOnTop={true} />
     </div>
   )
 }
