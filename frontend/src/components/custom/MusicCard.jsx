@@ -43,7 +43,7 @@ const MusicCard = ({ song }) => {
           <span>{song.singer}</span>
         </div> */}
         <iframe
-            src="https://audiomack.com/embed/_alxdr/song/paraluman" //src dynamic
+            src="https://audiomack.com/embed/_alxdr/song/paraluman"
             width="100%"
             height="252"
             frameborder="0"

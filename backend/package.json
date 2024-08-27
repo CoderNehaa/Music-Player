@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index",
+    "build": "babel . --out-dir dist --copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -22,5 +23,10 @@
     "nodemailer": "^6.9.14",
     "passport": "^0.7.0",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4"
   }
 }

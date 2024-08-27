@@ -1,7 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {musicData} from "../../assets/data";
 
 const INITIAL_STATE = {
   music: [],
@@ -13,7 +12,7 @@ export const getMusic = createAsyncThunk("getMusic", async (arg, thunkAPI) => {
     // const {data} = await axios.get(`http://localhost:3200/music/all`);
     // if(data.success){
       // thunkAPI.dispatch(setMusic(data.data));
-      thunkAPI.dispatch(setMusic(musicData));
+      // thunkAPI.dispatch(setMusic(musicData));
     // } else {
     //     toast.info(data.message);
     // }

@@ -17,7 +17,7 @@ const Navbar = () => {
             <i className="fa-solid fa-baht-sign fixed left-0 ml-1 lg:invisible"></i>
             <Link to="/" className="linkStyle">
               {" "}
-              Musicer{" "}
+              Muzicer{" "}
             </Link>
           </div>
         </div>

@@ -37,9 +37,10 @@ const Home = () => {
           Music Library
         </h1>
         <div>
-          {music && music.length
+          {/* {music && music.length
             ? music.map((song, index) => <MusicCard key={index} song={song} />)
-            : null}
+            : null} */}
+            <MusicCard />
         </div>
       </div>
     </div>
