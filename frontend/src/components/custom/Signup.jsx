@@ -35,7 +35,11 @@ const Signup = () => {
       toast.error("Passwords do not match!");
       return;
     }
-    const result = await signup(formData);
+    const result = await signup({
+      username:formData.username,
+      email:formData.email,
+      password:formData.password
+    });
     if(result){
       setFormData({
         username: '',
@@ -111,8 +115,10 @@ const Signup = () => {
             </button>
             </div>
             <CardFooter className="p-0">
-              <Button type="submit" className="ml-0">Create Account</Button>
-            </CardFooter>
+            <Button type="submit" className="mb-5">
+              Submit
+            </Button>
+          </CardFooter>
           </form>
         </CardContent>
       </Card>

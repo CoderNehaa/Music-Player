@@ -11,9 +11,9 @@ const INITIAL_STATE = {
 export const signup = createAsyncThunk(
     "user/createUser",
     async (values, thunkAPI) => {
-        thunkAPI.dispatch(setLoading(true));
         try{
-            const {data} = await axios.post('', ...values);
+            const {data} = await axios.post('http://localhost:3200/users/add', {...values});
+            console.log(data);
             if(data.success){
                 toast.info("Account created! Login.");
             } else {
@@ -22,7 +22,6 @@ export const signup = createAsyncThunk(
         } catch (e){
             toast.error("Failed to register! Try again.");
         }
-        thunkAPI.dispatch(setLoading(false));
     }
 )
 
