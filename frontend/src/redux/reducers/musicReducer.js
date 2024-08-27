@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api_url from "@/config";
 
 const INITIAL_STATE = {
   music: [],
@@ -9,16 +10,29 @@ const INITIAL_STATE = {
 
 export const getMusic = createAsyncThunk("getMusic", async (arg, thunkAPI) => {
   try {
-    // const {data} = await axios.get(`http://localhost:3200/music/all`);
-    // if(data.success){
-      // thunkAPI.dispatch(setMusic(data.data));
-      // thunkAPI.dispatch(setMusic(musicData));
-    // } else {
-    //     toast.info(data.message);
-    // }
+    const {data} = await axios.get(`${api_url}/music/all`);
+    if(data.success){
+      thunkAPI.dispatch(setMusic(data.data));
+    } else {
+        toast.info(data.message);
+    }
   } catch (e) {
     console.log(e);
     toast.error("Failed to load library! Try later.");
+  }
+});
+
+export const addMusic = createAsyncThunk("getMusic", async (song, thunkAPI) => {
+  try {
+    const {data} = await axios.post(`${api_url}/music/songs/add`, {...song});
+    if(data.success){
+      toast.success(data.message);
+    } else {
+      toast.info(data.message);
+    }
+  } catch (e) {
+    console.log(e);
+    toast.error("Failed to add song! Try later.");
   }
 });
 

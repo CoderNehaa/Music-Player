@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api_url from "@/config";
 
 const INITIAL_STATE = {
     user:null,
@@ -12,15 +13,17 @@ export const signup = createAsyncThunk(
     "user/createUser",
     async (values, thunkAPI) => {
         try{
-            const {data} = await axios.post('http://localhost:3200/users/add', {...values});
+            const {data} = await axios.post(`${api_url}/users/add`, {...values});
             console.log(data);
             if(data.success){
                 toast.info("Account created! Login.");
             } else {
                 toast.error(data.message);
             }
+            return data.success
         } catch (e){
             toast.error("Failed to register! Try again.");
+            return false;
         }
     }
 )
@@ -31,7 +34,7 @@ export const signin = createAsyncThunk(
     async (formData, thunkAPI) => {
         try{
             thunkAPI.dispatch(setLoading(true));
-            const {data} = await axios.post(`http://localhost:3200/users/login`, {
+            const {data} = await axios.post(`${api_url}/users/login`, {
                 email:formData.email, password:formData.password
             });
             if(data.success){
@@ -66,7 +69,7 @@ export const authentication = createAsyncThunk(
     async (arg, thunkAPI) => {
         const user = localStorage.getItem('user');
         if(!user){
-            const {data} = await axios.get(`http://localhost:3200/users/details/${user.id}`);
+            const {data} = await axios.get(`${api_url}/users/details/${user.id}`);
             console.log(data);
             if(data.success){
                 thunkAPI.dispatch(setUser(data.data));
@@ -88,7 +91,7 @@ export const resetPassword = createAsyncThunk(
     async (values, thunkAPI) => {
         try{
             console.log(values);
-            const {data} = await axios.patch(`http://localhost:3200/users/password/reset`, {
+            const {data} = await axios.patch(`${api_url}/users/password/reset`, {
                 ...values
             });
             if(data.success){
@@ -108,7 +111,7 @@ export const resetPassword = createAsyncThunk(
 export const getEmail = createAsyncThunk(
     "sendEmail",
     async (email, thunkAPI) => {
-        const {data} = await axios.post('http://localhost:3200/users/password/email', {
+        const {data} = await axios.post(`${api_url}/users/password/email`, {
             email
         });
         if(data.success){
@@ -127,14 +130,13 @@ export const addToFavorite = createAsyncThunk(
         const state = thunkAPI.getState();
         const {user} = state.userReducer;
   
-        const {data} = await axios.post(`http://localhost:3200/music/favorites/${user.id}/add/`, {
+        const {data} = await axios.post(`${api_url}/music/favorites/${user.id}/add/`, {
             ...song
         });
         if(data.success){
             const newFavoritesList = [song, ...user.favorites];
             thunkAPI.dispatch(setUser({...user, favorites:newFavoritesList}));
             toast.success(data.message);
-            // toast.success("Added to favorites!!");
         } else {
           toast.info(data.message)
         }
@@ -147,17 +149,16 @@ export const addToFavorite = createAsyncThunk(
   
 export const removeFavorite = createAsyncThunk(
     "addToFavorites",
-    async (song, thunkAPI) => {
+    async (songId, thunkAPI) => {
       try{
         const state = thunkAPI.getState();
         const {user} = state.userReducer;
   
-        const {data} = await axios.post(`http://localhost:3200/music/favorites/${user.id}/remove/`, {...song});
+        const {data} = await axios.delete(`${api_url}/music/favorites/${user.id}/remove/${songId}`);
         if(data.success){
             const arr = user.favorites.filter((favorite) => favorite.id != song.id);
             thunkAPI.dispatch(setUser({...user, favorites:arr}));
             toast.success(data.message);
-        //   toast.success("Removed from favorites!!");
         } else {
           toast.info(data.message)
         }

@@ -22,8 +22,7 @@ export class UserController {
     async addNewUser(req, res, next) {
         try {
             const {username, email, password } = req.body;
-
-            let userExist = await UserModel.findOne({ email });
+            let userExist = await UserModel.findOne({email});
             if (userExist) {
                 throw new CustomError(200, "User with this email already exists");
             }

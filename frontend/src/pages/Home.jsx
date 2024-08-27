@@ -31,16 +31,15 @@ const Home = () => {
   }, [loadMusic]);
 
   return (
-    <div className="h-full w-full mt-16">
-      <div className="h-full w-1/2 m-auto">
+    <div className="h-auto w-full mt-16">
+      <div className="h-auto w-1/2 m-auto">
         <h1 className="text-start tracking-wide text-4xl font-semibold py-5">
           Music Library
         </h1>
         <div>
-          {/* {music && music.length
+          {music && music.length
             ? music.map((song, index) => <MusicCard key={index} song={song} />)
-            : null} */}
-            <MusicCard />
+            : null}
         </div>
       </div>
     </div>

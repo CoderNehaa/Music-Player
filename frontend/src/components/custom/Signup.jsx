@@ -11,8 +11,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signup } from '@/redux/reducers/userReducer';
+import { toast } from 'react-toastify';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
 
 const Signup = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -32,22 +36,25 @@ const Signup = () => {
     e.preventDefault();
     const { password, confirmPassword } = formData;
     if (password !== confirmPassword) {
+      console.log(password, confirmPassword);
       toast.error("Passwords do not match!");
       return;
     }
-    const result = await signup({
+    dispatch(signup({
       username:formData.username,
       email:formData.email,
       password:formData.password
-    });
-    if(result){
-      setFormData({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      })
-    }
+    })).then((data) => {
+      console.log(data);
+      if(data.payload){
+        setFormData({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        })
+      }
+    })
   };
 
   return (
@@ -91,10 +98,10 @@ const Signup = () => {
               />
               <button
               type="button"
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              className="absolute top-9 right-2"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <i className="fa-solid fa-eye"></i> : <i className="fa-slid fa-eye-slash"></i>}
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
             </div>
             <div className="relative space-y-1">
@@ -108,10 +115,10 @@ const Signup = () => {
               />
               <button
               type="button"
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
-              onClick={() => setShowPassword(!showPassword)}
+              className="absolute top-9 right-2"
+              onClick={() => setShowConfirmPassword(!showPassword)}
             >
-              {showConfirmPassword ? <i className="fa-solid fa-eye"></i> : <i className="fa-slid fa-eye-slash"></i>}
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
             </div>
             <CardFooter className="p-0">
@@ -123,6 +130,7 @@ const Signup = () => {
         </CardContent>
       </Card>
   );
-};
+
+}
 
 export default Signup;

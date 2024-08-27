@@ -14,7 +14,7 @@ const port = process.env.PORT;
 
 server.use(express.json());
 server.use(cors({
-    origin: ['https://muzicer.netlify.app'],
+    origin: ['https://muzicer.netlify.app', 'http://localhost:5173'],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
 }));
 

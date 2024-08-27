@@ -44,7 +44,7 @@ function App() {
   }, []);
 
   return (
-    <div className='h-screen w-screen m-0 p-0 bg-slate-100 dark:bg-slate-900 dark:text-slate-400'>
+    <div className='min-h-screen h-full w-screen m-0 p-0 bg-slate-100 dark:bg-slate-900 dark:text-slate-400'>
       <RouterProvider router={routes}/>
       <ToastContainer autoClose={3000} newestOnTop={true} />
     </div>

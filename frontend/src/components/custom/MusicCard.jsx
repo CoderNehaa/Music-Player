@@ -8,15 +8,17 @@ const MusicCard = ({ song }) => {
   const dispatch = useDispatch();
 
   const isFavorite = () => {
-    if(user && user.favorites && !user.favorites.length){
-      const favSongs = [...user.favorites]
+    if(user && user.favorites && user.favorites.length > 0){
+      const isPresent = user.favorites.find((obj) => obj.songId === song.id);
+      return isPresent;
     } else {
       return false
     }
   }
 
   function handleFavoriteClick() {
-    if (song.isFavorite) {
+    const isFav = isFavorite();
+    if (isFav) {
       dispatch(removeFavorite({ userId: user.id, songId: song.id }));
     } else {
       dispatch(addToFavorite({ userId: user.id, songId: song.id }));
@@ -34,21 +36,12 @@ const MusicCard = ({ song }) => {
   return (
     <div className="relative shadow-sm border-2 dark:shadow-md dark:shadow-slate-800 m-4 p-4 flex flex-col justify-between">
       <div className="flex flex-col items-center">
-        {/* <img src={song.image} height={50} width={50} />
-        <div className="flex flex-col ml-4">
-          <span className="text-lg font-semibold capitalize">
-            {" "}
-            {song.title}
-          </span>
-          <span>{song.singer}</span>
-        </div> */}
         <iframe
-            src="https://audiomack.com/embed/_alxdr/song/paraluman"
+            src={song.audio}
             width="100%"
             height="252"
             frameborder="0"
-            title="Paraluman" //title dynamic
-            className="bg-transparent"
+            title={song.title} 
           ></iframe>
       </div>
       <div className="flex items-center p-2">
@@ -65,3 +58,4 @@ const MusicCard = ({ song }) => {
 };
 
 export default MusicCard;
+

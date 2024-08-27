@@ -1,14 +1,36 @@
 import { CustomError } from "../utils/custom.error.js";
+import SongModel from "../models/song.model.js";
 
 export class MusicController{
     async getMusic(req, res, next){
         try{
-            //it returns all documents of music collection
+            const songs = await SongModel.find();
             return res.status(200).send({
                 success:true,
-                data:[]
+                data:songs
             })
         } catch (e){
+            console.log(e);
+            next(e);
+        }
+    }
+
+    async addSong(req, res, next){
+        try {
+            const {title, audio } = req.body;
+            let songExist = await SongModel.findOne({title});
+            if (songExist) {
+                throw new CustomError(200, "Title already exists");
+            }
+
+            const song = new SongModel({ title, audio });
+            const newSong = await song.save();  
+            return res.status(201).send({
+                success: true,
+                message: "Song added successfully",
+                data: newSong
+            });
+        } catch (e) {
             console.log(e);
             next(e);
         }
@@ -81,4 +103,11 @@ export class MusicController{
         }
     }
 
+    async addToFavorite(req, res, next){
+
+    }
+
+    async removeFromFavorite(){
+        
+    }
 }

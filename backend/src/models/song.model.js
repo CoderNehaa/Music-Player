@@ -1,32 +1,27 @@
 import mongoose, { Schema } from "mongoose";
 
-const userSchema = mongoose.Schema({
-    userId:{
+const songSchema = mongoose.Schema({
+    songId:{
         type:Schema.Types.ObjectId,
         default:new mongoose.Types.ObjectId
     },
-    username:{
+    audio:{
         type:String,
         required:true,
-        unique:false
+        unique:true
     },
-    email:{
+    title:{
         type:String,
         unique:true,
         required:true
     },
-    password:{
-        type:String,
-        required:true
-    },
-    accountDate:{
+    addedOn:{
         type:Date,
         default:Date.now,
         required:true
-    },
-    favorites:[]
+    }
 })
 
-const UserModel = mongoose.model("User", userSchema);
-export default UserModel;
+const SongModel = mongoose.model("Music", songSchema);
+export default SongModel;
 
