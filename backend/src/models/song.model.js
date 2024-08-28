@@ -1,10 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
 const songSchema = mongoose.Schema({
-    songId:{
-        type:Schema.Types.ObjectId,
-        default:new mongoose.Types.ObjectId
-    },
     audio:{
         type:String,
         required:true,

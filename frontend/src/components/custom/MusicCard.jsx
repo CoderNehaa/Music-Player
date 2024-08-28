@@ -7,9 +7,9 @@ const MusicCard = ({ song }) => {
   const user = useSelector((state) => state.userReducer.user);
   const dispatch = useDispatch();
 
-  const isFavorite = () => {
+  const isFavorite = (songId) => {
     if(user && user.favorites && user.favorites.length > 0){
-      const isPresent = user.favorites.find((obj) => obj.songId === song.id);
+      const isPresent = user.favorites.some((obj) => obj._id === songId);
       return isPresent;
     } else {
       return false
@@ -17,11 +17,11 @@ const MusicCard = ({ song }) => {
   }
 
   function handleFavoriteClick() {
-    const isFav = isFavorite();
+    const isFav = isFavorite(song._id);
     if (isFav) {
-      dispatch(removeFavorite({ userId: user.id, songId: song.id }));
+      dispatch(removeFavorite(song._id));
     } else {
-      dispatch(addToFavorite({ userId: user.id, songId: song.id }));
+      dispatch(addToFavorite(song));
     }
   }
 
@@ -40,13 +40,13 @@ const MusicCard = ({ song }) => {
             src={song.audio}
             width="100%"
             height="252"
-            frameborder="0"
+            frameBorder="0"
             title={song.title} 
           ></iframe>
       </div>
       <div className="flex items-center p-2">
         <span className="mr-3 text-lg" onClick={handleFavoriteClick}>
-          {isFavorite() ? <BsHeartFill /> : <BsHeart />}
+          {isFavorite(song._id) ? <BsHeartFill /> : <BsHeart />}
         </span>
         <span className="mr-3 text-2xl" onClick={handlePlaylistClick}>
           <BsPlus />

@@ -129,13 +129,18 @@ export const addToFavorite = createAsyncThunk(
       try{        
         const state = thunkAPI.getState();
         const {user} = state.userReducer;
-  
-        const {data} = await axios.post(`${api_url}/music/favorites/${user.id}/add/`, {
-            ...song
+        
+        const {data} = await axios.post(`${api_url}/music/favorites/${user.userId}/add/`, {
+            song
         });
         if(data.success){
             const newFavoritesList = [song, ...user.favorites];
-            thunkAPI.dispatch(setUser({...user, favorites:newFavoritesList}));
+            const updatedUser = {
+                ...user, 
+                favorites:newFavoritesList
+            };
+            thunkAPI.dispatch(setUser(updatedUser));
+            localStorage.setItem('user', JSON.stringify(updatedUser));
             toast.success(data.message);
         } else {
           toast.info(data.message)
@@ -154,11 +159,16 @@ export const removeFavorite = createAsyncThunk(
         const state = thunkAPI.getState();
         const {user} = state.userReducer;
   
-        const {data} = await axios.delete(`${api_url}/music/favorites/${user.id}/remove/${songId}`);
+        const {data} = await axios.delete(`${api_url}/music/favorites/${user.userId}/remove/${songId}`);
         if(data.success){
-            const arr = user.favorites.filter((favorite) => favorite.id != song.id);
-            thunkAPI.dispatch(setUser({...user, favorites:arr}));
-            toast.success(data.message);
+            const arr = user.favorites.filter((favorite) => favorite._id != songId);
+            const updatedUser = {
+                ...user, 
+                favorites:arr
+            };
+            thunkAPI.dispatch(setUser(updatedUser));
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            toast.info(data.message);
         } else {
           toast.info(data.message)
         }
