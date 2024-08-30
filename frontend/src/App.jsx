@@ -11,6 +11,7 @@ import Navbar from './components/custom/Navbar';
 
 import { authentication } from './redux/reducers/userReducer';
 import './App.css'
+import PlaylistDetails from './pages/PlaylistDetails';
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,10 @@ function App() {
         {
           path:"/playlists",
           element:<Playlists />
+        },
+        {
+          path:"/playlist/:id/details",
+          element:<PlaylistDetails />
         },
         {
           path:"/favorites",
@@ -44,9 +49,9 @@ function App() {
   }, []);
 
   return (
-    <div className='min-h-screen h-full w-screen m-0 p-0 bg-slate-100 dark:bg-slate-900 dark:text-slate-400'>
+    <div className='min-h-screen h-full w-full m-0 p-0 bg-slate-100 dark:bg-zinc-800 dark:text-zinc-200'>
       <RouterProvider router={routes}/>
-      <ToastContainer autoClose={3000} newestOnTop={true} />
+      <ToastContainer autoClose={2000} newestOnTop={true} />
     </div>
   )
 }

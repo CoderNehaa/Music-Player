@@ -16,7 +16,7 @@ function Auth() {
   } ,[user]);
 
   return (
-    <div className="relative h-full w-full flex flex-col justify-center items-center">
+    <div className="relative h-screen w-full flex flex-col justify-center items-center">
       <Tabs defaultValue="signin" className="w-1/3">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signin">SIGN IN</TabsTrigger>

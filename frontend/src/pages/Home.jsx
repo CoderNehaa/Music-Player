@@ -1,5 +1,5 @@
 import MusicCard from "@/components/custom/MusicCard";
-import { getMusic } from "@/redux/reducers/musicReducer";
+import { getMusic, getUserPlaylists } from "@/redux/reducers/musicReducer";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ const Home = () => {
 
   async function fetchData() {
     await dispatch(getMusic());
+    await dispatch(getUserPlaylists());
     setLoadMusic(false);
   }
 
@@ -32,7 +33,7 @@ const Home = () => {
 
   return (
     <div className="h-auto w-full mt-16">
-      <div className="h-auto w-1/2 m-auto">
+      <div className="h-auto md:w-3/4 xl:w-1/2 m-auto">
         <h1 className="text-start tracking-wide text-4xl font-semibold py-5">
           Music Library
         </h1>

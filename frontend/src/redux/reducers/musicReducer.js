@@ -22,22 +22,6 @@ export const getMusic = createAsyncThunk("getMusic", async (arg, thunkAPI) => {
   }
 });
 
-// export const addMusic = createAsyncThunk("getMusic", async (song, thunkAPI) => {
-//   try {
-//     const { data } = await axios.post(`${api_url}/music/songs/add`, {
-//       ...song,
-//     });
-//     if (data.success) {
-//       toast.success(data.message);
-//     } else {
-//       toast.info(data.message);
-//     }
-//   } catch (e) {
-//     console.log(e);
-//     toast.error("Failed to add song! Try later.");
-//   }
-// });
-
 export const getUserPlaylists = createAsyncThunk(
   "getUserPlaylists",
   async (arg, thunkAPI) => {
@@ -71,6 +55,7 @@ export const createPlaylist = createAsyncThunk(
       );
       if (data.success) {
         toast.success(data.message);
+        thunkAPI.dispatch(getUserPlaylists())
       } else {
         toast.info(data.message);
       }
@@ -85,12 +70,12 @@ export const addSongToPlaylist = createAsyncThunk(
   "addSongToPlaylist",
   async ({ song, playlistId }, thunkAPI) => {
     try {
-      const { user } = thunkAPI.getState().userReducer;
       const { data } = await axios.post(
-        `http://localhost:3200/music/playlist/${playlistId}/songs/add`,
-        { ...song }
+        `${api_url}/music/playlist/${playlistId}/songs/add`,
+        { song }
       );
       if (data.success) {
+        thunkAPI.dispatch(getUserPlaylists());
         toast.success(data.message);
       } else {
         toast.info(data.message);
@@ -104,15 +89,14 @@ export const addSongToPlaylist = createAsyncThunk(
 
 export const removeSongFromPlaylist = createAsyncThunk(
   "removeSongFromPlaylist",
-  async (song, thunkAPI) => {
+  async ({songId, playlistId}, thunkAPI) => {
     try {
-      const { user } = thunkAPI.getState().userReducer;
-      const { data } = await axios.post(
-        `http://localhost:3200/music/playlist/${playlistId}/songs/remove`,
-        { ...song }
+      const { data } = await axios.delete(
+        `${api_url}/music/playlist/${playlistId}/songs/${songId}/remove`
       );
       if (data.success) {
-        toast.success(data.message);
+        thunkAPI.dispatch(getUserPlaylists());
+        toast.info(data.message);
       } else {
         toast.info(data.message);
       }
@@ -122,6 +106,22 @@ export const removeSongFromPlaylist = createAsyncThunk(
     }
   }
 );
+
+export const deletePlaylist  = createAsyncThunk(
+  "deletePlaylist",
+  async (playlistId, thunkAPI) => {
+    try{
+      const {data} = await axios.delete(`${api_url}/music/playlist/remove/${playlistId}`);
+      if(data.success){
+        thunkAPI.dispatch(getUserPlaylists());
+      }
+      toast.info(data.message);
+    } catch (e){
+      console.log(e);
+      toast.error("Failed to delete playlist! Try later")
+    }
+  }
+)
 
 const musicSlice = createSlice({
   name: "musicSlice",

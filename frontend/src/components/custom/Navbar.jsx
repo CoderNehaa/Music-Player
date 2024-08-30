@@ -8,8 +8,8 @@ const Navbar = () => {
   const {user} = useSelector((state) => state.userReducer);
   return (
     <>
-      <div className="fixed shadow-sm shadow-white-10 w-full z-10 top-0 flex justify-between items-center bg-slate-50
-        dark:shadow-sm dark:shadow-slate-800 py-3 px-10">
+      <div className="fixed shadow-sm shadow-white-10 w-full z-10 top-0 flex justify-between items-center bg-slate-50 dark:bg-zinc-800
+        dark:shadow-sm dark:shadow-zinc-900 py-3 px-10">
         <div>
           {/* Logo */}
           <div className="font-bold text-3xl text-center 

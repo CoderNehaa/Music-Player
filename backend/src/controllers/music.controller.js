@@ -77,12 +77,24 @@ export class MusicController {
     try {
       const { playlistId } = req.params;
       const { song } = req.body;
-      //convert playlistId to mongoose object id
-      // in playlists collection, where document's id matches with playlistIdObj
-      // push this song to the songs array field of that document
-      return res.success(200).send({
+      
+      const playlistFound = await PlaylistModel.findOne({ _id:playlistId });
+      if (!playlistFound) {
+        throw new CustomError(200, "Playlist not found");
+      }
+      
+      const result = await PlaylistModel.updateOne(
+        { _id:playlistId },
+        { $addToSet: { songs: song } }
+      );
+      
+      if (!result.acknowledged) {
+        throw new CustomError(200, "Failed to add song! Try later");
+      }
+  
+      return res.status(200).send({
         success: true,
-        message: "",
+        message: "Song added to playlist",
       });
     } catch (e) {
       console.log(e);
@@ -92,19 +104,48 @@ export class MusicController {
 
   async removeSongFromPlaylist(req, res, next) {
     try {
-      const { playlistId } = req.params;
-      const { song } = req.body;
-      //  convert playlistId to mongoose object id
-      //  in playlists collection, where document's id matches with playlistIdObj
-      //  remove this song from the songs array field of that document
-      return res.success(200).send({
+      const { playlistId, songId } = req.params;
+      const playlistFound = await PlaylistModel.findOne({_id: playlistId });
+  
+      if (!playlistFound) {
+        throw new CustomError(404, "Playlist not found");
+      }
+  
+      const result = await PlaylistModel.updateOne(
+        { _id:playlistId },
+        { $pull: { songs: {_id:songId} } } 
+      );
+  
+      if (!result.acknowledged || result.modifiedCount === 0) {
+        throw new CustomError(200, "Failed to remove from playlist!");
+      }
+      
+      return res.status(200).send({
         success: true,
-        message: "",
+        message: "Song removed from playlist",
       });
     } catch (e) {
       console.log(e);
       next(e);
     }
+  }
+
+  async deletePlaylist(req, res, next){
+      try{
+        const {playlistId} = req.params;        
+        const result = await PlaylistModel.deleteOne({_id: playlistId});
+        if(!result.acknowledged || result.deletedCount === 0){
+          throw new CustomError(200, "Failed to delete playlist!");
+        }
+
+        return res.status(200).send({
+          success:true,
+          message:"Playlist deleted successfully"
+        })
+      } catch (e){
+        console.log(e);
+        next(e);
+      }
   }
 
   async addToFavorite(req, res, next) {
